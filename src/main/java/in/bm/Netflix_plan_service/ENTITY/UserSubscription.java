@@ -14,6 +14,7 @@ import lombok.Setter;
 @Entity
 @Table(name= "user_subscriptions")
 public class UserSubscription {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,21 +1,42 @@
 package in.bm.Netflix_plan_service.CONTROLLER;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import in.bm.Netflix_plan_service.RequestDTO.PlanRequestDTO;
+import in.bm.Netflix_plan_service.ResponseDTO.PlanResponseDTO;
+import in.bm.Netflix_plan_service.SERVICE.PlanService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/plans")
+@RequiredArgsConstructor
 public class PlanController {
 
+    private final PlanService planService;
 
-    @GetMapping
-    public String getUserAgent(HttpServletRequest request){
-       String UserAgent = request.getHeader("user-agent").toString();
-       return UserAgent;
-
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PlanResponseDTO createPlan(@RequestBody PlanRequestDTO requestDTO){
+        return planService.createPlan(requestDTO);
     }
 
+    @GetMapping("/{planId}")
+    @ResponseStatus(HttpStatus.OK)
+    public PlanResponseDTO createPlan(@PathVariable Long planId){
+        return planService.getPlanById(planId);
+    }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<PlanResponseDTO> getAllPlans(){
+        return planService.getAllPlans();
+    }
+
+    @PatchMapping("/{planId}")
+    @ResponseStatus(HttpStatus.OK)
+    public PlanResponseDTO updatePlan(@PathVariable Long planId , @RequestBody PlanRequestDTO requestDTO){
+        return planService.updatePlan(planId,requestDTO);
+    }
 }
