@@ -3,6 +3,7 @@ package in.bm.Netflix_plan_service.CONTROLLER;
 import in.bm.Netflix_plan_service.RequestDTO.PlanRequestDTO;
 import in.bm.Netflix_plan_service.ResponseDTO.PlanResponseDTO;
 import in.bm.Netflix_plan_service.SERVICE.PlanService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class PlanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PlanResponseDTO createPlan(@RequestBody PlanRequestDTO requestDTO){
+    public PlanResponseDTO createPlan(@Valid @RequestBody PlanRequestDTO requestDTO){
         return planService.createPlan(requestDTO);
     }
 
@@ -36,7 +37,7 @@ public class PlanController {
 
     @PatchMapping("/{planId}")
     @ResponseStatus(HttpStatus.OK)
-    public PlanResponseDTO updatePlan(@PathVariable Long planId , @RequestBody PlanRequestDTO requestDTO){
+    public PlanResponseDTO updatePlan(@PathVariable Long planId , @Valid @RequestBody PlanRequestDTO requestDTO){
         return planService.updatePlan(planId,requestDTO);
     }
 }

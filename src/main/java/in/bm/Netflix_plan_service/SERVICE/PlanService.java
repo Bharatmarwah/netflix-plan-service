@@ -6,7 +6,11 @@ import in.bm.Netflix_plan_service.REPOSITORY.UserSubscriptionRepository;
 import in.bm.Netflix_plan_service.RequestDTO.PlanRequestDTO;
 import in.bm.Netflix_plan_service.ResponseDTO.PlanResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +21,8 @@ public class PlanService {
     private final PlanRepository planRepository;
     private final UserSubscriptionRepository userSubscriptionRepository;
 
+    @Transactional
+    @CacheEvict(cacheNames = "plans", allEntries = true)
     public PlanResponseDTO createPlan(PlanRequestDTO requestDTO){
 
         Plan plan =  new Plan();
@@ -39,6 +45,8 @@ public class PlanService {
     }
 
 
+    @Transactional
+    @Cacheable(cacheNames = "plan",key = "#planId")
     public PlanResponseDTO getPlanById(Long planId) {
         var plan = planRepository
                 .findById(planId)
@@ -55,6 +63,8 @@ public class PlanService {
                 .build();
     }
 
+    @Transactional
+    @Cacheable(cacheNames = "plans",key = "'all'")
     public List<PlanResponseDTO> getAllPlans() {
         List<Plan> plans = planRepository.findAll();
 
@@ -69,6 +79,11 @@ public class PlanService {
                 .build()).toList();
     }
 
+    @Transactional
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "plan", allEntries = true),
+            @CacheEvict(cacheNames = "plans", allEntries = true)
+    })
     public PlanResponseDTO updatePlan(Long planId, PlanRequestDTO requestDTO) {
         var plan = planRepository.findById(planId).orElseThrow(()-> new RuntimeException("Plan not found with id: "+planId));
 
